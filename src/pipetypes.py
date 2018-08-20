@@ -14,13 +14,12 @@ class Pipetype:
 
     @staticmethod
     def getPipetype(fct_name):
-
-        def err(graph, state, maybe):
+        
+        def err(graph, args, maybe):
             return maybe or "pull"
 
         if fct_name not in Pipetype.pipetypes:
             print("pipetypes not existing") #TODO Error
             return err
-        
+
         return Pipetype.pipetypes[fct_name]
-        

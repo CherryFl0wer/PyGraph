@@ -20,19 +20,23 @@ class Query:
         done = -1 # tell when it's finished
         pc = end # pipeline counter
 
-        print(self.pipeline)
         step = None
         state = None
         pipetype = None
 
+        print("::: Init Run :::")
+        print("Pipeline ", self.pipeline)
+        print("State ", self.state)
+
         while done < end: 
-            ts = list(self.state)
             step = self.pipeline[pc] # Tuple / Pair containing pipetype and args
-            state = ts[pc] if isinstance(ts[pc], dict) else {} 
+            state = self.state[pc] if pc < len(self.state) and isinstance(self.state[pc], dict) else {} 
+            print(" - Current step & state ", step, state)
+            
             pipetype = Pipetype.getPipetype(step[0]) 
-
-            maybe_gremlin = pipetype(self.graph, step[1], maybe_gremlin, state)
-
+            
+            maybe_gremlin = pipetype(self.graph, maybe_gremlin, state, step[1])
+            print(" => ", maybe_gremlin)
             if maybe_gremlin == "pull":
                 maybe_gremlin = False
                 if pc - 1 > done:
@@ -53,7 +57,8 @@ class Query:
                 maybe_gremlin = False
                 pc -= 1
         
-        results = map(lambda gremlin: gremlin["result"] if gremlin["result"] is not None else gremlin["vertex"], results)
+        print(results)
+        results = map(lambda gremlin: gremlin["result"] if "result" in gremlin else gremlin["vertex"], results)
         return results
 
     
