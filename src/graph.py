@@ -16,7 +16,7 @@ class Graph:
 
     def v(self, *args):
         query = Query(self)
-        query.add('vertex', args)
+        query.add('vertex', list(args))
         return query
         
     def addVertices(self, V):
@@ -58,6 +58,7 @@ class Graph:
         return  None if id not in self.lookupIndex else self.lookupIndex[id]
     
     def findVertexByIDS(self, ids):
+        
         if len(ids) == 1:
             maybe_vertex = self.findVertexByID(ids[0])
             return [maybe_vertex] if maybe_vertex is not None else []
@@ -74,3 +75,10 @@ class Graph:
     
     def searchVertices(self, filtr):
         return filter(lambda vertex: objectFilter(vertex, filtr) ,self.vertices)
+    
+    def findOutEdges(self, vertex):
+        return vertex["_out"]
+    
+    def findInEdges(self, vertex):
+        return vertex["_in"]
+    

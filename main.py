@@ -1,5 +1,6 @@
 from src.graph import Graph
 from src.methods import __initPipetypes
+import pprint
 
 __initPipetypes()
 
@@ -19,4 +20,5 @@ if __name__ == '__main__':
     g.addEdge({"_out": 10, "_in": 'charlie', "_label": 'knows'})
 
     res = g.v(1).out("knows").out().run()
-    print(res)
+    pp = pprint.PrettyPrinter(indent=2)
+    pp.pprint(res)

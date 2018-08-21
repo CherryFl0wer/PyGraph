@@ -8,7 +8,7 @@ Any object that has a vertex property and a state property
 is a gremlin by this definition.
 """
 def makeGremlin(vertex, state):
-    return vertex, state or None
+    return { "vertex" : vertex, "state": state or None }
 
 
 def goToVertex(gremlin, vertex):
@@ -33,5 +33,5 @@ def filterEdges(filtr):
             return edge["_label"] in filtr
         
         return objectFilter(edge, filtr)
-        
+
     return _filterEdges

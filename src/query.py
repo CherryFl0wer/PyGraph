@@ -1,5 +1,5 @@
 from src.pipetypes import Pipetype
-
+import pprint
 class Query:
 
     def __init__(self, graph):
@@ -9,7 +9,7 @@ class Query:
         self.state = []
 
     def add(self, pipetype, args):
-        step = (pipetype, args)
+        step = (pipetype, list(args))
         self.pipeline.append(step)
         return self
     
@@ -23,20 +23,16 @@ class Query:
         step = None
         state = None
         pipetype = None
+        self.state = (pc + 1) * [None]
 
-        print("::: Init Run :::")
-        print("Pipeline ", self.pipeline)
-        print("State ", self.state)
-
-        while done < end: 
+        while done < end:  
             step = self.pipeline[pc] # Tuple / Pair containing pipetype and args
-            state = self.state[pc] if pc < len(self.state) and isinstance(self.state[pc], dict) else {} 
-            print(" - Current step & state ", step, state)
-            
+            self.state[pc] = self.state[pc] if isinstance(self.state[pc], dict) else {} 
+            state = self.state[pc]
             pipetype = Pipetype.getPipetype(step[0]) 
+
+            maybe_gremlin = pipetype(self.graph, maybe_gremlin, state, step[1])  
             
-            maybe_gremlin = pipetype(self.graph, maybe_gremlin, state, step[1])
-            print(" => ", maybe_gremlin)
             if maybe_gremlin == "pull":
                 maybe_gremlin = False
                 if pc - 1 > done:
@@ -56,10 +52,10 @@ class Query:
                     results.append(maybe_gremlin)
                 maybe_gremlin = False
                 pc -= 1
-        
-        print(results)
+
+
         results = map(lambda gremlin: gremlin["result"] if "result" in gremlin else gremlin["vertex"], results)
-        return results
+        return list(results)
 
     
     
