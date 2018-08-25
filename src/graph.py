@@ -26,14 +26,14 @@ class Graph:
 
     def addVertex(self, vertex):
         
-        if "_id" not in vertex:
+        if "_id" not in vertex: # Create unique index
             vertex["_id"] = self.uniqueID
             self.uniqueID += 1
-        elif self.findVertexByID(vertex["_id"]) is not None:
+        elif self.findVertexByID(vertex["_id"]) is not None: 
             raise Exception("ID already existing in graph") 
             
         self.vertices.append(vertex)
-        self.lookupIndex[vertex["_id"]] = vertex
+        self.lookupIndex[vertex["_id"]] = vertex # Fast access to vertex
 
         vertex["_out"] = []
         vertex["_in"] = []
@@ -47,7 +47,7 @@ class Graph:
         edge["_out"] = self.findVertexByID(edge["_out"])
 
         if "_in" not in edge or "_out" not in edge:
-            raise Exception("Impossible to create edge %d -> %d".format(edge["_in"], edge["_out"]))
+            raise Exception("Impossible to create edge %d -> %d".format(edge["_in"], edge["_out"])) # Better managing error TODO
             
         edge["_in"]["_in"].append(edge)
         edge["_out"]["_out"].append(edge)
