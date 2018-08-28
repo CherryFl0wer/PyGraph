@@ -70,9 +70,73 @@ def traversal(direction):
     return _traversal
 
 
+"""
+@name:  property
+@param:  graph :: Dict,
+@param:  gremlin :: Dict,
+@param:  state :: Dict ,
+@param:  args :: Array<Any>
+@return: Dict
+
+Get the value from a dict
+"""
+def property(graph, gremlin, state, args):
+    if not gremlin: #No gremlin means no property
+        return "pull"
+    
+    if len(args) == 0 or args[0] not in gremlin["vertex"]:
+        return False
+    
+    gremlin["finish"] = gremlin["vertex"][args[0]]
+    return gremlin
+
+"""
+@name:  isUnique
+@param:  graph :: Dict,
+@param:  gremlin :: Dict,
+@param:  state :: Dict ,
+@param:  args :: Array<Any>
+@return: Dict
+
+Check if vertex is unique in our query.
+Set to true if never passed by this vertex otherwise pull
+"""
+def isUnique(graph, gremlin, state, args):
+    if not gremlin or gremlin["vertex"]["_id"] in state:
+        return "pull"  
+    
+    state[gremlin["vertex"]["_id"]] = True
+    return gremlin
+
+"""
+@name:  filter
+@param:  graph :: Dict,
+@param:  gremlin :: Dict,
+@param:  state :: Dict ,
+@param:  args :: Array<Any>
+@return: Dict
+
+Filter vertex
+"""
+def filtering(graph, gremlin, state, args):
+    if not gremlin or len(args) == 0:
+        return "pull"  
+    
+    if isinstance(args[0], dict):
+        return gremlin if hp.objectFilter(gremlin["vertex"], args[0]) else "pull"
+
+    if callable(args[0]):
+        return gremlin if args[0](gremlin["vertex"]) else "pull"
+    
+    return gremlin
+
+
 # Add methods to pipetype availaibility
+
 
 def __initPipetypes():
     Pipetype.addPipetype('vertex', vertex)  
-    Pipetype.addPipetype('out', traversal('out'))
-    Pipetype.addPipetype('in', traversal('in'))
+    Pipetype.addPipetype('o', traversal('out'))
+    Pipetype.addPipetype('i', traversal('in'))
+    Pipetype.addPipetype('property', property)
+    Pipetype.addPipetype('unique', isUnique)

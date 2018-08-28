@@ -15,7 +15,6 @@ class Query:
     def __init__(self, graph):
         self.graph = graph
         self.pipeline = []
-        self.gremlins = []
         self.state = []
 
     def add(self, pipetype, args):
@@ -38,7 +37,7 @@ class Query:
         self.state = (pc + 1) * [None] # init state
 
         while done < end:  
-            step = self.pipeline[pc] # Tuple / Pair containing pipetype and args
+            step = self.pipeline[pc] # Pair containing pipetype and args
             self.state[pc] = self.state[pc] if isinstance(self.state[pc], dict) else {} 
             state = self.state[pc]
             pipetype = Pipetype.getPipetype(step[0]) 
@@ -66,7 +65,7 @@ class Query:
                 pc -= 1
 
 
-        results = map(lambda gremlin: gremlin["result"] if "result" in gremlin else gremlin["vertex"], results)
+        results = map(lambda gremlin: gremlin["finish"] if "finish" in gremlin else gremlin["vertex"], results)
         return list(results)
 
     
