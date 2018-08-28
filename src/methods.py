@@ -142,18 +142,18 @@ Return element args[0] by args[0]
 args[0] need to be an int
 """
 def take(graph, gremlin, state, args): 
-
+    if len(args) == 0:
+        return "pull"
+        
     if "taken" not in state:
         state["taken"] = 0
-
-    print(state["taken"], gremlin["vertex"]["name"] if gremlin is not False else "no")    
-    if not gremlin or len(args) == 0:
-        return "pull"
 
     if state["taken"] == args[0]:
         state["taken"] = 0
         return "done"
 
+    if not gremlin:
+        return "pull"
 
     state["taken"] += 1
     return gremlin
