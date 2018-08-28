@@ -140,3 +140,4 @@ def __initPipetypes():
     Pipetype.addPipetype('i', traversal('in'))
     Pipetype.addPipetype('property', property)
     Pipetype.addPipetype('unique', isUnique)
+    Pipetype.addPipetype('filter', filtering)
