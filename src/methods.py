@@ -130,6 +130,35 @@ def filtering(graph, gremlin, state, args):
     
     return gremlin
 
+"""
+@name:  take
+@param:  graph :: Dict,
+@param:  gremlin :: Dict,
+@param:  state :: Dict ,
+@param:  args :: Array<Any>
+@return: Dict
+
+Return element args[0] by args[0]
+args[0] need to be an int
+"""
+def take(graph, gremlin, state, args): 
+
+    if "taken" not in state:
+        state["taken"] = 0
+
+    print(state["taken"], gremlin["vertex"]["name"] if gremlin is not False else "no")    
+    if not gremlin or len(args) == 0:
+        return "pull"
+
+    if state["taken"] == args[0]:
+        state["taken"] = 0
+        return "done"
+
+
+    state["taken"] += 1
+    return gremlin
+
+
 
 # Add methods to pipetype availaibility
 
@@ -141,3 +170,4 @@ def __initPipetypes():
     Pipetype.addPipetype('property', property)
     Pipetype.addPipetype('unique', isUnique)
     Pipetype.addPipetype('filter', filtering)
+    Pipetype.addPipetype('take', take)

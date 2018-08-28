@@ -1,4 +1,5 @@
 from src.pipetypes import Pipetype
+import pprint
 
 class Query:
 
@@ -34,7 +35,9 @@ class Query:
         step = None
         state = None
         pipetype = None
-        self.state = (pc + 1) * [None] # init state
+
+        if len(self.state) != pc + 1:
+            self.state = (pc + 1) * [None] # init state
 
         while done < end:  
             step = self.pipeline[pc] # Pair containing pipetype and args
@@ -44,6 +47,7 @@ class Query:
 
             maybe_gremlin = pipetype(self.graph, maybe_gremlin, state, step[1])  
             
+
             if maybe_gremlin == "pull": # we don't have enough information we move forward (to the right)
                 maybe_gremlin = False
                 if pc - 1 > done:
@@ -57,16 +61,15 @@ class Query:
                 done = pc
             
             pc += 1
-
             if pc > end:
                 if maybe_gremlin:
                     results.append(maybe_gremlin)
                 maybe_gremlin = False
                 pc -= 1
-
-
-        results = map(lambda gremlin: gremlin["finish"] if "finish" in gremlin else gremlin["vertex"], results)
-        return list(results)
+                
+        results = list(map(lambda gremlin: gremlin["finish"] if "finish" in gremlin else gremlin["vertex"], results))
+  
+        return results
 
     
     

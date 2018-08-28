@@ -23,6 +23,6 @@ if __name__ == '__main__':
 
     pp = pprint.PrettyPrinter(indent=2)
 
-    res = g.v(30).o().i().property('name').unique().run()
-    pp.pprint(res)
-
+    res = g.v(30).o().i().property('name').unique().take(1)
+    print(res.run())
+    print(res.run())
