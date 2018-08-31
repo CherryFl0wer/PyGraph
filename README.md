@@ -9,3 +9,4 @@ TODO:
   - Better management of Error *KO*
   - Tests *KO*
   - Add more methods
+  - Serialization

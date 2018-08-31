@@ -1,5 +1,6 @@
 from src.query import Query
 from src.helper import objectFilter
+from src.methods import __initPipetypes as pipeinit
 
 class Graph:
 
@@ -15,6 +16,7 @@ class Graph:
 
 
     def v(self, *args):
+        pipeinit()
         query = Query(self)
         query.add('vertex', list(args))
         return query

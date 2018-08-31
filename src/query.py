@@ -16,15 +16,31 @@ class Query:
     def __init__(self, graph):
         self.graph = graph
         self.pipeline = []
-        self.state = []
+        self.state = [] 
+    
+    """
+    @name: add
+    @param: pipetype :: String
+    @param: args: List<Any>
+    @return: Query
 
+    Add pipetype + arguments for futur call in a pipeline
+    """
     def add(self, pipetype, args):
         step = (pipetype, list(args))
         self.pipeline.append(step)
         return self
 
         
+    """
+    @name: run
+    @return: List<Dict> 
     
+    Run the query list from the pipeline by doing a Lazy approach 
+    Indeed we store the args and the function name to call the method
+    only when we need the result.
+
+    """
     def run(self):
         end = len(self.pipeline) - 1 # Step' index of the pipeline
         maybe_gremlin = False 
