@@ -158,16 +158,62 @@ def take(graph, gremlin, state, args):
     state["taken"] += 1
     return gremlin
 
+"""
+@name:  like
+@param:  graph :: Dict,
+@param:  gremlin :: Dict,
+@param:  state :: Dict ,
+@param:  args :: Array<Any>
+@return: Dict
 
+label the current vertices
+"""
+def like(self, graph, gremlin, state, args):
+  if not gremlin: 
+      return "pull" 
+                                
+  gremlin["state"]["as"] = gremlin["state"]["as"] or {}                  
+  gremlin["state"]["as"][args[0]] = gremlin["vertex"]                 
+  return gremlin
+
+"""
+@name:  merge
+@param:  graph :: Dict,
+@param:  gremlin :: Dict,
+@param:  state :: Dict ,
+@param:  args :: Array<Any>
+@return: Dict
+
+Copie 
+"""
+def merge(self, graph, gremlin, state, args):
+    if not gremlin or "vertices" not in state: 
+        return "pull" 
+
+    if "vertices" not in state or len(state["vertices"]) == 0:
+        asname = gremlin["state"] if "state" in gremlin else {}
+        asname = asname["as"] if "as" in asname else {}
+        state["vertices"] = list(filter(lambda x: True if x is not None else False, 
+                                    map(lambda renamed: asname[renamed], args)
+                                )) # Rename the vertex by copying the vertex from the state 'as' 
+
+    
+    if len(state["vertices"]) == 0:
+        return "pull"
+    
+    vertex = state["vertices"].pop()
+    return hp.makeGremlin(vertex, gremlin["state"])
 
 # Add methods to pipetype availaibility
 
 
 def __initPipetypes():
-    Pipetype.addPipetype('vertex', vertex)  
-    Pipetype.addPipetype('o', traversal('out'))
-    Pipetype.addPipetype('i', traversal('in'))
-    Pipetype.addPipetype('property', property)
-    Pipetype.addPipetype('unique', isUnique)
-    Pipetype.addPipetype('filter', filtering)
-    Pipetype.addPipetype('take', take)
+    Pipetype.addPipetype('vertex', vertex)  # Go to a vertex
+    Pipetype.addPipetype('o', traversal('out')) # Out edge
+    Pipetype.addPipetype('i', traversal('in')) # In edge
+    Pipetype.addPipetype('property', property) # Get specific value from a dict
+    Pipetype.addPipetype('unique', isUnique) # Filter uniqueness
+    Pipetype.addPipetype('filter', filtering)   # Filter your own method
+    Pipetype.addPipetype('take', take)  # Take element x by x
+    Pipetype.addPipetype('like', like) # Renamer
+    Pipetype.addPipetype('merge', merge) # Merging renamer
