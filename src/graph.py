@@ -15,8 +15,10 @@ class Graph:
             self.addEdges(E)
 
 
-    def v(self, *args):
+    def initpipe(self):
         pipeinit()
+
+    def v(self, *args):
         query = Query(self)
         query.add('vertex', list(args))
         return query
