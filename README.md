@@ -8,4 +8,3 @@ This project was made to have a better understanding of graph and how graph data
 TODO: 
   - Better management of Error *KO*
   - Tests *KO*
-  - Serialization *KO*
